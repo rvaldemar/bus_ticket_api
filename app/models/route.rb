@@ -1,5 +1,7 @@
 class Route < ApplicationRecord
   belongs_to :bus
+  belongs_to :starting_point, class_name: "City", foreign_key: "start_id"
+  belongs_to :destination, class_name: "City", foreign_key: "destination_id"
   has_many :tickets
 
   validates :start_date, presence: true, allow_blank: false

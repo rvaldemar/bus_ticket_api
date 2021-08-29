@@ -8,8 +8,6 @@ class RoutesController < ApplicationController
       search_params[:start_date].to_datetime.at_end_of_day
 
     @paths = PathFinder.new(attrs).getAllPaths
-    p @paths
-    p @paths.count
   end
 
   private
