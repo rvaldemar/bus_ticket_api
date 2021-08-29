@@ -1,5 +1,6 @@
 class Route < ApplicationRecord
   belongs_to :bus
+  has_many :tickets
 
   validates :start_date, presence: true, allow_blank: false
   validates :end_date, presence: true, allow_blank: false
@@ -39,5 +40,9 @@ class Route < ApplicationRecord
 
   def commute_time
     (end_date - start_date).to_i
+  end
+
+  def seats_available?
+    tickets.count < bus.seats
   end
 end

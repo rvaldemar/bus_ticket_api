@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_29_115056) do
+ActiveRecord::Schema.define(version: 2021_08_29_162248) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,7 +40,18 @@ ActiveRecord::Schema.define(version: 2021_08_29_115056) do
     t.index ["start_id"], name: "index_routes_on_start_id"
   end
 
+  create_table "tickets", force: :cascade do |t|
+    t.bigint "route_id", null: false
+    t.jsonb "payment_details", null: false
+    t.string "status", null: false
+    t.integer "seat_number", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["route_id"], name: "index_tickets_on_route_id"
+  end
+
   add_foreign_key "routes", "buses"
   add_foreign_key "routes", "cities", column: "destination_id"
   add_foreign_key "routes", "cities", column: "start_id"
+  add_foreign_key "tickets", "routes"
 end

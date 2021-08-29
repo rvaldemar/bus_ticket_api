@@ -1,9 +1,9 @@
 class PathFinder
   def initialize(options)
-    @s = options[:start_id]
-    @d = options[:destination_id]
-    @start_date = options[:start_date]
-    @end_date = options[:end_date]
+    @s = options['start_id'].to_i
+    @d = options['destination_id'].to_i
+    @start_date = options['start_date'].to_datetime
+    @end_date = options['end_date'].to_datetime
     @result = []
   end
 
@@ -18,7 +18,11 @@ class PathFinder
 
     # Call the recursive helper function to print all paths
     printAllPathsUtil(@s, visited, path, @start_date)
-    @result
+    @result.sort do |a, b|
+      b.first.start_date != a.first.start_date ?
+        b.first.start_date <=> a.first.start_date :
+        (a.last.end_date - a.first.start_date) - (b.last.end_date - b.first.start_date)
+    end
   end
 
   private
@@ -27,23 +31,21 @@ class PathFinder
   visited[] keeps track of vertices in current path.
   path[] stores actual vertices and path_index is current
   index in path[]'''
-  def printAllPathsUtil(u, visited, path, start_date)
+  def printAllPathsUtil(u, visited, path, start_date, route = nil)
 
     # Mark the current node as visited and store in path
     visited[u]= true
-    path.push(u)
+    path.push(route) if route && route.seats_available?
 
     # If current vertex is same as destination, then print
     # current path[]
-    if u == @d
+    if u == @d && route && route.seats_available?
         @result.push path.clone
-    else
+    elsif u != @d
       # If current vertex is not destination
-      # Recur for all the vertices adjacent to this vertex
-
       Route.where(start_id: u, start_date: start_date..@end_date, end_date: start_date..@end_date).each do |route|
         unless visited[route.destination_id]
-            printAllPathsUtil(route.destination_id, visited, path, route.start_date)
+            printAllPathsUtil(route.destination_id, visited, path, route.start_date, route)
         end
       end
     end
@@ -51,11 +53,6 @@ class PathFinder
     # Remove current vertex from path[] and mark it as unvisited
     path.pop
     visited[u]= false
-  end
-
-  # function to add an edge to graph
-  def addEdge(u, v)
-    @graph[u].push(v)
   end
 
 end

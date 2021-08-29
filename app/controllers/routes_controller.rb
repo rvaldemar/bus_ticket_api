@@ -1,17 +1,23 @@
 class RoutesController < ApplicationController
-  def search
-    attrs = search_params
-    attrs[end_date] = params[:end_date] ?
-      params[:end_date] || search_params[:start_date].to_datetime.at_end_of_day
+  respond_to :json
 
-    Route.where(start_point_params)
+  def search
+    attrs = search_params.to_hash
+    attrs['end_date'] = params[:end_date] ?
+      params['end_date'] :
+      search_params[:start_date].to_datetime.at_end_of_day
+
+    @paths = PathFinder.new(attrs).getAllPaths
+    p @paths
+    p @paths.count
   end
 
   private
-  def start_point_params
+  def search_params
     params.permit(
       :start_date,
       :start_id,
+      :destination_id
     )
   end
 end
