@@ -10,9 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 2021_08_29_115056) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "buses", force: :cascade do |t|
+    t.integer "seats", default: 49, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "cities", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "routes", force: :cascade do |t|
+    t.bigint "bus_id", null: false
+    t.bigint "start_id", null: false
+    t.bigint "destination_id", null: false
+    t.datetime "start_date", null: false
+    t.datetime "end_date", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["bus_id"], name: "index_routes_on_bus_id"
+    t.index ["destination_id"], name: "index_routes_on_destination_id"
+    t.index ["start_id"], name: "index_routes_on_start_id"
+  end
+
+  add_foreign_key "routes", "buses"
+  add_foreign_key "routes", "cities", column: "destination_id"
+  add_foreign_key "routes", "cities", column: "start_id"
 end
