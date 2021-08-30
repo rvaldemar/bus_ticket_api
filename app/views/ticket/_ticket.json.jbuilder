@@ -1,5 +1,5 @@
 json.id                 ticket.id
-json.ticket             ticket.seat_number
+json.seat_number        ticket.seat_number
 json.status             ticket.status
 json.bus_number         ticket.route.bus.id
 json.departure_time     ticket.route.start_date

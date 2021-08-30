@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  apipie
   get 'cities' => 'cities#index'
   get 'search' => 'routes#search'
   post 'buy' => 'ticket#buy'
